@@ -1,0 +1,90 @@
+[COLOR=rgb(68, 68, 68)][COLOR=rgb(68, 68, 68)][SIZE=11px][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][COLOR=rgb(68, 68, 68)][SIZE=3][FONT=arial]Since @[URL='http://forums.bukkit.org/members/deltahat.503/']deltahat[/URL] is in lack of time, i will continue his [URL='http://forums.bukkit.org/threads/econ-command-iconomy-v6-make-any-plugin-an-iconomy-plugin-766.9355/']plugin[/URL] for him:[/FONT][/SIZE][/COLOR][/FONT][/SIZE][/COLOR][/SIZE][/COLOR][/COLOR]
+[COLOR=rgb(68, 68, 68)][COLOR=rgb(68, 68, 68)][SIZE=11px][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][COLOR=rgb(68, 68, 68)][SIZE=3][FONT=arial]Command iConomy - Charge for each command[/FONT][/SIZE][/COLOR][/FONT][/SIZE][/COLOR][/SIZE][/COLOR][/COLOR]
+[COLOR=rgb(68, 68, 68)][COLOR=rgb(68, 68, 68)][SIZE=11px][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][SIZE=3][FONT=arial][B]Version[/B] v7[/FONT][/SIZE][/FONT][/SIZE][/COLOR][/FONT][/SIZE][/COLOR][/SIZE][/COLOR][/COLOR]
+
+[COLOR=rgb(68, 68, 68)][COLOR=rgb(68, 68, 68)][SIZE=11px][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][SIZE=3][FONT=arial][SIZE=5][B]Overview[/B][/SIZE] [/FONT][/SIZE][/FONT][/SIZE][/COLOR][/FONT][/SIZE][/COLOR][/SIZE][/COLOR][/COLOR]
+[COLOR=rgb(68, 68, 68)][COLOR=rgb(68, 68, 68)][SIZE=11px][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][SIZE=3][FONT=arial]Command iConomy is a plugin that allows a server admin to assign a cost to server commands that is deducted from a player's iConomy account whenever a player uses that command.  Commands are matched using java regular expressions. If text  entered by a player matches a configured rule, Command iConomy  will attempt to bill the player.  Command iConomy requires [URL='http://forums.bukkit.org/threads/econ-iconomy-4-5-1-elektra-493-531.40/']iConomy 4.5+[/URL] to be installed.[/FONT][/SIZE][/FONT][/SIZE][/COLOR][/FONT][/SIZE][/COLOR][/SIZE][/COLOR][/COLOR]
+
+[COLOR=rgb(68, 68, 68)][COLOR=rgb(68, 68, 68)][SIZE=11px][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][SIZE=3]Examples include charging for each summoned magic carpet, or adding a fee for different kits.[/SIZE][/FONT][/SIZE][/COLOR][/SIZE][/COLOR][/COLOR]
+
+[COLOR=rgb(68, 68, 68)][COLOR=rgb(68, 68, 68)][SIZE=11px][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][SIZE=3][FONT=arial][B][SIZE=5]Configuration[/SIZE][/B] [/FONT][/SIZE][/FONT][/SIZE][/COLOR][/FONT][/SIZE][/COLOR][/SIZE][/COLOR][/COLOR]
+[COLOR=rgb(68, 68, 68)][COLOR=rgb(68, 68, 68)][SIZE=11px][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][SIZE=3][FONT=arial]To set the price of a command, add a line to prices.yml.  Command iConomy matches regular expressions against user  input. Regular expressions allow you to charge separately  for individual sub-commands or even specific command arguments. [/FONT][/SIZE][/FONT][/SIZE][/COLOR][/FONT][/SIZE][/COLOR][/SIZE][/COLOR][/COLOR]
+
+[COLOR=rgb(68, 68, 68)][COLOR=rgb(68, 68, 68)][SIZE=11px][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][SIZE=3][FONT=arial]A typical configuration line looks like this: [FONT=courier new]^/tp: 10[/FONT][/FONT][/SIZE][/FONT][/SIZE][/COLOR][/FONT][/SIZE][/COLOR][/SIZE][/COLOR][/COLOR]
+[COLOR=rgb(68, 68, 68)][COLOR=rgb(68, 68, 68)][SIZE=11px][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][SIZE=3][FONT=arial]A configuration line matching sub-commands might look like this:[/FONT] [FONT=courier new]^/time (day|night): 20[/FONT][/SIZE][/FONT][/SIZE][/COLOR][/SIZE][/COLOR][/COLOR]
+
+[COLOR=rgb(68, 68, 68)][COLOR=rgb(68, 68, 68)][SIZE=11px][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][SIZE=3][FONT=arial]Command expressions are matched in order from top to bottom. If [/FONT][/SIZE][SIZE=3][FONT=arial]a match is found, Command iConomy stops looking for a match and [/FONT][/SIZE][SIZE=3][FONT=arial]charges the player the configured amount. If the command is [/FONT][/SIZE][SIZE=3][FONT=arial]configured with a cost of zero, processing will stop but the [/FONT][/SIZE][SIZE=3][FONT=arial]player will not be charged. Together these features allow open [/FONT][/SIZE][SIZE=3][FONT=arial]ended commands to be individually charged. Ex:[/FONT][/SIZE][/FONT][/SIZE][/COLOR][/SIZE][/COLOR][/COLOR]
+
+[COLOR=rgb(68, 68, 68)][COLOR=rgb(68, 68, 68)][SIZE=11px][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][FONT=courier new][SIZE=3]^/warp help$: 0[/SIZE][/FONT][/FONT][/SIZE][/COLOR][/SIZE][/COLOR][/COLOR]
+[COLOR=rgb(68, 68, 68)][COLOR=rgb(68, 68, 68)][SIZE=11px][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][FONT=courier new][SIZE=3]^/warp \S+$: 10[/SIZE][/FONT][/FONT][/SIZE][/COLOR][/SIZE][/COLOR][/COLOR]
+
+[COLOR=rgb(68, 68, 68)][COLOR=rgb(68, 68, 68)][SIZE=11px][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][SIZE=5][B][COLOR=rgb(68, 68, 68)][FONT=Bitstream Vera Sans Mono][FONT=arial]Really Quick Regular Expression Info[/FONT][/FONT][/COLOR][/B][/SIZE][/FONT][/SIZE][/COLOR][/SIZE][/COLOR][/COLOR]
+[COLOR=rgb(68, 68, 68)][COLOR=rgb(68, 68, 68)][SIZE=11px][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][SIZE=3][FONT=arial]^ = Start of command[/FONT][/SIZE][/FONT][/SIZE][/COLOR][/FONT][/SIZE][/COLOR][/SIZE][/COLOR][/COLOR]
+[COLOR=rgb(68, 68, 68)][COLOR=rgb(68, 68, 68)][SIZE=11px][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][SIZE=3][FONT=arial]$ = End of command[/FONT][/SIZE][/FONT][/SIZE][/COLOR][/FONT][/SIZE][/COLOR][/SIZE][/COLOR][/COLOR]
+[COLOR=rgb(68, 68, 68)][COLOR=rgb(68, 68, 68)][SIZE=11px][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][SIZE=3][FONT=arial]\S+ = One or more non-whitespace characters[/FONT][/SIZE][/FONT][/SIZE][/COLOR][/FONT][/SIZE][/COLOR][/SIZE][/COLOR][/COLOR]
+
+[COLOR=rgb(68, 68, 68)][COLOR=rgb(68, 68, 68)][SIZE=11px][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][I][B][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][SIZE=3][FONT=arial]For best results, please study and learn regular expressions![/FONT][/SIZE][/FONT][/SIZE][/COLOR][/B][/I][/FONT][/SIZE][/COLOR][/SIZE][/COLOR][/COLOR]
+
+[COLOR=rgb(68, 68, 68)][COLOR=rgb(68, 68, 68)][SIZE=11px][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][SIZE=3][FONT=arial]  For more info on regular expressions, see:  [URL='http://www.regular-expressions.info/reference.html'][COLOR=rgb(65, 131, 196)]http://www.regular-expressions.info/reference.html[/COLOR][/URL][/FONT][/SIZE][/FONT][/SIZE][/COLOR][/FONT][/SIZE][/COLOR][/SIZE][/COLOR][/COLOR]
+
+[COLOR=rgb(68, 68, 68)][COLOR=rgb(68, 68, 68)][SIZE=11px][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][B][SIZE=5][FONT=arial]Command Cooldowns[/FONT][/SIZE][/B][/FONT][/SIZE][/COLOR][/SIZE][/COLOR][/COLOR]
+[COLOR=rgb(68, 68, 68)][COLOR=rgb(68, 68, 68)][SIZE=11px][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][SIZE=3][FONT=arial]You can now configure a number of seconds before charging a player again for a command. To do so, add a space and then the number of seconds to wait after the command's cost. Ex:[/FONT][/SIZE][/FONT][/SIZE][/COLOR][/SIZE][/COLOR][/COLOR]
+
+[COLOR=rgb(68, 68, 68)][COLOR=rgb(68, 68, 68)][SIZE=11px][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][SIZE=3][FONT=courier new]^/warp \S+$: 10 30[/FONT][/SIZE][/FONT][/SIZE][/COLOR][/SIZE][/COLOR][/COLOR]
+
+[COLOR=rgb(68, 68, 68)][COLOR=rgb(68, 68, 68)][SIZE=11px][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][SIZE=5][B][FONT=arial]Permissions[/FONT][/B][/SIZE][/FONT][/SIZE][/COLOR][/SIZE][/COLOR][/COLOR]
+[LIST]
+[*][SIZE=3][FONT=arial][FONT=courier new]CommandIConomy.Free[/FONT] - Grants free access to all commands.[/FONT][/SIZE]
+[/LIST]
+[COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][SIZE=3][FONT=arial][SIZE=5][B]Internationalization[/B][/SIZE] [/FONT][/SIZE][/FONT][/SIZE][/COLOR]
+[COLOR=rgb(68, 68, 68)][COLOR=rgb(68, 68, 68)][SIZE=11px][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][SIZE=3][FONT=arial]Three additional settings can be made in the config.yml file to localize Command iConomy's text. You will have to create config.yml. They are:  [/FONT][/SIZE][/FONT][/SIZE][/COLOR][/FONT][/SIZE][/COLOR][/SIZE][/COLOR][/COLOR]
+[LIST]
+[*][SIZE=3][FONT=arial][COLOR=rgb(68, 68, 68)]NoAccountMessage[/COLOR][/FONT][/SIZE]
+[*][SIZE=3][FONT=arial][COLOR=rgb(68, 68, 68)]InsuficientFundsMessage[/COLOR][/FONT][/SIZE]
+[*][SIZE=3][FONT=arial][COLOR=rgb(68, 68, 68)]AccountDeductedMessage [/COLOR][/FONT][/SIZE]
+[LIST]
+[*][SIZE=3][FONT=arial][COLOR=rgb(68, 68, 68)]Substitute {cost} for cost[/COLOR][/FONT][/SIZE]
+[/LIST]
+[/LIST]
+[COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][SIZE=5][B][FONT=arial]Download[/FONT][/B][/SIZE][/FONT][/SIZE][/COLOR]
+[COLOR=rgb(68, 68, 68)][COLOR=rgb(68, 68, 68)][SIZE=11px][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][SIZE=3][FONT=arial][URL='http://dl.dropbox.com/u/28093398/CommandIConomy.jar']CommandIConomy.jar[/URL][/FONT][/SIZE][/FONT][/SIZE][/COLOR][/FONT][/SIZE][/COLOR][/SIZE][/COLOR][/COLOR]
+[COLOR=rgb(68, 68, 68)][COLOR=rgb(68, 68, 68)][SIZE=11px][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][SIZE=3][FONT=arial]Source included in jar[/FONT][/SIZE][/FONT][/SIZE][/COLOR][/FONT][/SIZE][/COLOR][/SIZE][/COLOR][/COLOR]
+[COLOR=rgb(68, 68, 68)][COLOR=rgb(68, 68, 68)][SIZE=11px][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][SIZE=3][/SIZE][/FONT]
+[COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][COLOR=rgb(51, 51, 51)][B][FONT=arial][SIZE=5]Changelog[/SIZE][/FONT][/B][/COLOR] (since Kostronor):[/FONT][/SIZE][/COLOR]
+[COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono]  [COLOR=rgb(68, 68, 68)][SIZE=11px][COLOR=rgb(68, 68, 68)][SIZE=11px][COLOR=rgb(68, 68, 68)][SIZE=11px][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono]Version 7[/FONT][/SIZE][/COLOR][/SIZE][/COLOR][/SIZE][/COLOR][/SIZE][/COLOR][/FONT][/SIZE][/COLOR]
+[COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][LIST]
+[*]Reworked against cb818
+[*]should work with every never build, if not please instantly contact me and i will fix it!
+[/LIST]
+[spoiler=Release Notes][/FONT][/SIZE][/COLOR]
+[COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][COLOR=rgb(68, 68, 68)][COLOR=rgb(68, 68, 68)][SIZE=11px][COLOR=rgb(68, 68, 68)][SIZE=11px][COLOR=rgb(68, 68, 68)][SIZE=11px][COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono]Version 1[/FONT][/SIZE][/COLOR][/SIZE][/COLOR][/SIZE][/COLOR][/SIZE][/COLOR][/COLOR][/FONT][/SIZE][/COLOR]
+[COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][LIST]
+[*]Initial Release
+[/LIST]
+Version 2 [COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][LIST]
+[*]Added free permission
+[*]Only match first expression
+[*]Match but don't display zero cost commands
+[/LIST]
+Version 3[/FONT][/SIZE][/COLOR] [COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][LIST]
+[*]Increased priority of CommandPreProcess hook to improve compatibility
+[/LIST]
+Version 3.1[/FONT][/SIZE][/COLOR] [COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][LIST]
+[*]Bukkit 602 compatibility
+[/LIST]
+Version 5[/FONT][/SIZE][/COLOR] [COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][LIST]
+[*]iConomy 4.6.5 suport
+[/LIST][/FONT][/SIZE][/COLOR] [COLOR=rgb(68, 68, 68)][LIST]
+[*]Added optional logging to the console
+[*]Added optional matching of chat events
+[*]Added command cost to insufficient funds message
+[*]Verified CB612 and MC1.4 support
+[/LIST]
+Version 6[/COLOR] [COLOR=rgb(68, 68, 68)][LIST]
+[*]Added command cooldowns
+[*]Added fee collection account
+[/LIST]
+Version 7[/COLOR] [COLOR=rgb(68, 68, 68)][LIST]
+[*][iConomy 5 support
+[/LIST][/COLOR][/FONT][/SIZE][/COLOR]
+[COLOR=rgb(68, 68, 68)][SIZE=11px][FONT=Bitstream Vera Sans Mono][/spoiler][/FONT][/SIZE][/COLOR][/SIZE][/COLOR][/FONT][/SIZE][/COLOR][/SIZE][/COLOR][/COLOR]
