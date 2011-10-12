@@ -1,5 +1,10 @@
 name: Command iConomy
 main: com.ryanmichela.cmdiconomy.CIPlugin
-version: 7
+version: 8
 website: https://github.com/rmichela/Command-iConomy
-author: Ryan Michela
+author: Ryan Michela, Max Kalus
+
+permissions:
+  commandiconomy.free:
+    description: All commands are free of charge
+    default: false

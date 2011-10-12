@@ -20,12 +20,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.util.config.Configuration;
 
-import com.iConomy.*;
+import com.fernferret.allpay.GenericBank;
 
 public class CIListener extends PlayerListener {
 
@@ -57,10 +58,10 @@ public class CIListener extends PlayerListener {
 		
 		try {
 			// Is the player exempt by permission?
-			if(iConomy.getPermissions().has(event.getPlayer(), "CommandIConomy.Free")) return;
+			if (event.getPlayer().hasPermission("commandiconomy.free")) return;
 		} catch (NoClassDefFoundError e) {
 			// Permissions not installed, fall back to ops
-			if(event.getPlayer().isOp()) return;
+			//if(event.getPlayer().isOp()) return; ops may also want to pay :-)
 		}
 		
 		// Is this command one we are charging for?	
@@ -69,20 +70,12 @@ public class CIListener extends PlayerListener {
 			Pattern p = Pattern.compile(re, Pattern.CASE_INSENSITIVE);
 			Matcher m = p.matcher(event.getMessage());
 			if(m.find()) {
+				// get bank
+				GenericBank bank = plugin.getAllPay().getEconPlugin();
+				
 				System.out.println(event.getMessage());
 				// Is this command currently cooling down?
 				if(!CooldownClock.TimerExpired(event.getPlayer(), re)) {
-					return;
-				}
-				// Does the player have an account?
-				String pName = event.getPlayer().getName();
-				if(!iConomy.hasAccount(pName)) {
-					String msg = config().getString("NoAccountMessage", "No bank account.");
-					if(verbose()) {
-						log().info("[Command iConomy] " + event.getPlayer().getName() + " does not have a bank account ?!");
-					}
-					event.getPlayer().sendMessage(ChatColor.RED + msg);
-					event.setCancelled(true);
 					return;
 				}
 				// Does the command have a cost of zero?
@@ -93,9 +86,11 @@ public class CIListener extends PlayerListener {
 				}
 				System.out.println("[debug]cost > 0 deduct");
 				// Does the player have sufficient funds?
-				if(!(iConomy.getAccount(pName).getHoldings().balance() >= cost)) {
+				double holdings = bank.getBalance(event.getPlayer(), -1);
+				
+				if (holdings < cost) {
 					String msg = config().getString("InsuficientFundsMessage", "Insuficent funds. {cost} needed.");
-					msg = msg.replaceAll("\\{cost\\}", iConomy.format(cost));
+					msg = msg.replaceAll("\\{cost\\}", bank.getFormattedAmount(event.getPlayer(), cost, -1));
 					if(verbose()) {
 						log().info("[Command iConomy] " + event.getPlayer().getName() + " has insuficent funds to invoke " + event.getMessage());
 					}
@@ -107,13 +102,14 @@ public class CIListener extends PlayerListener {
 				///////////////////////////////////////////////////
 				
 				// All checks passed - deduct funds
-				iConomy.getAccount(pName).getHoldings().subtract(cost);
-				String msg = config().getString("AccountDeductedMessage", "Charged {cost}");
+				bank.pay(event.getPlayer(), cost, -1);
+				//iConomy.getAccount(pName).getHoldings().subtract(cost);
+				//String msg = config().getString("AccountDeductedMessage", "Charged {cost}");
 				if(verbose()) {
-					log().info("[Command iConomy] " + event.getPlayer().getName() + " was charged " + iConomy.format(cost) + " for " + event.getMessage());
+					log().info("[Command iConomy] " + event.getPlayer().getName() + " was charged " + bank.getFormattedAmount(event.getPlayer(), cost, -1) + " for " + event.getMessage());
 				}
-				msg = msg.replaceAll("\\{cost\\}", iConomy.format(cost));
-				event.getPlayer().sendMessage(ChatColor.GREEN + msg);
+				//msg = msg.replaceAll("\\{cost\\}", iConomy.format(cost));
+				//event.getPlayer().sendMessage(ChatColor.GREEN + msg);
 				
 				// Start the cooldown timer
 				CooldownClock.StartTimer(event.getPlayer(), re, pc.getCooldown(re));
@@ -122,9 +118,11 @@ public class CIListener extends PlayerListener {
 				String payTo = config().getString("PayTo");
 				if(payTo != null) {
 					try {
-						iConomy.getAccount(payTo).getHoldings().add(cost);
+						Player payableTo = plugin.getServer().getPlayer(payTo);
+						if (payableTo == null) throw new NullPointerException();
+						bank.give(payableTo, cost, -1);
 						if(verbose()) {
-							log().info("[Command iConomy] " + payTo + " was credited " + iConomy.format(cost));
+							log().info("[Command iConomy] " + payTo + " was credited " + bank.getFormattedAmount(payableTo, cost, -1));
 						}
 					} catch (NullPointerException e) {
 						log().severe("[Command iConomy] Cannot deposit funds into the account " + payTo + " because it does not exist!");

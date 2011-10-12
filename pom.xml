@@ -35,6 +35,11 @@
 			<version>0.6.2</version>
 		</dependency>
 		<dependency>
+			<groupId>com.iConomy</groupId>
+			<artifactId>iConomy</artifactId>
+			<version>5.0</version>
+		</dependency>
+		<dependency>
 			<groupId>com.iCo6</groupId>
 			<artifactId>iConomy</artifactId>
 			<version>6.0</version>

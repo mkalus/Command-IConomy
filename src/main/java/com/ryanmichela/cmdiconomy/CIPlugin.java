@@ -22,11 +22,25 @@ import java.io.PrintStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.fernferret.allpay.AllPay;
+
 public class CIPlugin extends JavaPlugin {
+	AllPay allPay;
+	
+	/**
+	 * @return allPay instance (singleton)
+	 */
+	public AllPay getAllPay() {
+		if (allPay == null) allPay = new AllPay(this, "Command iConomy: ");
+		return allPay;
+	}
+
+	private static PluginListener PluginListener = null;
 	
 	private Logger log;
 	private File pricesFile;
@@ -42,21 +56,20 @@ public class CIPlugin extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		if(getServer().getPluginManager().getPlugin("iConomy") == null) {
-			log.severe("[Command iConomy] Could not find iConomoy!");
-		} else {
-			try {
-				PriceCache pc = new PriceCache(pricesFile);	
-				CIListener listener = new CIListener(this, pc);
-				getServer().getPluginManager().registerEvent(Type.PLAYER_COMMAND_PREPROCESS, listener , Priority.Lowest, this);
-				// Conditionally bill for player chat
-				if(getConfiguration().getBoolean("ChargeForChat", false)) {
-					getServer().getPluginManager().registerEvent(Type.PLAYER_CHAT, listener, Priority.Lowest, this);
-				}
-				log.info("[Command iConomy] Loaded.");
-			} catch (Exception e) {
-				log.log(Level.SEVERE, "[Command iConomy] Failed to process prices.config", e);
-			}
+		// register enable events from other plugins
+		PluginListener = new PluginListener();
+
+		getServer().getPluginManager().registerEvent(Event.Type.PLUGIN_ENABLE,
+				PluginListener, Priority.Monitor, this);
+
+		try {
+			PriceCache pc = new PriceCache(pricesFile);	
+			CIListener listener = new CIListener(this, pc);
+			getServer().getPluginManager().registerEvent(Type.PLAYER_COMMAND_PREPROCESS, listener , Priority.Lowest, this);
+		
+			log.info("[Command iConomy] Loaded.");
+		} catch (Exception e) {
+			log.log(Level.SEVERE, "[Command iConomy] Failed to process prices.config", e);
 		}
 	}
 	
