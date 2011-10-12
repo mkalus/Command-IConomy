@@ -47,15 +47,13 @@ public class CIPlugin extends JavaPlugin {
 	
 	@Override
 	public void onLoad() {
-		log = getServer().getLogger();
-		pricesFile = new File(getDataFolder(), "prices.yml");
-		
-		//Initialize config files
-		initFiles();
 	}
 
 	@Override
 	public void onEnable() {
+		//Initialize config files
+		initFiles();
+
 		// register enable events from other plugins
 		PluginListener = new PluginListener();
 
@@ -80,6 +78,9 @@ public class CIPlugin extends JavaPlugin {
 	}
 	
 	private void initFiles() {
+		log = getServer().getLogger();
+		pricesFile = new File(getDataFolder(), "prices.yml");
+
 		// Initialize config directory
 		if(!getDataFolder().exists()) {
 			getDataFolder().mkdir();
